@@ -23,8 +23,8 @@ type Option struct {
 }
 
 type Configuration struct {
-	Description *string
-	Homepage    *string
+	Description string
+	Homepage    string
 	Topics      []string
 }
 
@@ -65,8 +65,8 @@ func dryRun(opt *Option, conf *Configuration) error {
 	}
 
 	cur := &Configuration{
-		Description: repo.Description,
-		Homepage:    repo.Homepage,
+		Description: *repo.Description,
+		Homepage:    *repo.Homepage,
 		Topics:      topics,
 	}
 	for _, line := range strings.Split(pretty.Compare(cur, conf), "\n") {
@@ -86,8 +86,8 @@ func apply(opt *Option, conf *Configuration) error {
 	c := ghClient(ctx, opt.AccessToken)
 	repo := &github.Repository{
 		Name:        &opt.RepoName,
-		Description: conf.Description,
-		Homepage:    conf.Homepage,
+		Description: &conf.Description,
+		Homepage:    &conf.Homepage,
 	}
 	_, _, err := c.Repositories.Edit(ctx, opt.RepoOwner, opt.RepoName, repo)
 	if err != nil {
