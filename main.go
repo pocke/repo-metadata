@@ -64,8 +64,8 @@ func dryRun(opt *Option, conf *Configuration) error {
 	}
 
 	cur := &Configuration{
-		Description: *repo.Description,
-		Homepage:    *repo.Homepage,
+		Description: repo.GetDescription(),
+		Homepage:    repo.GetHomepage(),
 		Topics:      topics,
 	}
 	for _, line := range strings.Split(pretty.Compare(cur, conf), "\n") {
