@@ -89,7 +89,6 @@ func apply(opt *Option, conf *Configuration) error {
 		Description: conf.Description,
 		Homepage:    conf.Homepage,
 	}
-	fmt.Println(opt)
 	_, _, err := c.Repositories.Edit(ctx, opt.RepoOwner, opt.RepoName, repo)
 	if err != nil {
 		return err
