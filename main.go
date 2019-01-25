@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"github.com/google/go-github/github"
+	"github.com/kylelemons/godebug/pretty"
+	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/oauth2"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -51,6 +53,31 @@ func Main(args []string) error {
 }
 
 func dryRun(opt *Option, conf *Configuration) error {
+	ctx := context.Background()
+	c := ghClient(ctx, opt.AccessToken)
+	repo, _, err := c.Repositories.Get(ctx, opt.RepoOwner, opt.RepoName)
+	if err != nil {
+		return err
+	}
+	topics, _, err := c.Repositories.ListAllTopics(ctx, opt.RepoOwner, opt.RepoName)
+	if err != nil {
+		return err
+	}
+
+	cur := &Configuration{
+		Description: repo.Description,
+		Homepage:    repo.Homepage,
+		Topics:      topics,
+	}
+	for _, line := range strings.Split(pretty.Compare(cur, conf), "\n") {
+		if strings.HasPrefix(line, "+") {
+			fmt.Print("\x1B[32m")
+		} else if strings.HasPrefix(line, "-") {
+			fmt.Print("\x1B[31m")
+		}
+		fmt.Println(line)
+		fmt.Print("\x1B[0m")
+	}
 	return nil
 }
 
@@ -127,4 +154,9 @@ func ghClient(ctx context.Context, accessToken string) *github.Client {
 
 func isTravis() bool {
 	return os.Getenv("TRAVIS") == "true"
+}
+
+func lineDiff(a, b string) []diffmatchpatch.Diff {
+	dmp := diffmatchpatch.New()
+	return dmp.DiffMain(a, b, true)
 }
