@@ -1,5 +1,5 @@
 description: Specify GitHub repository metadata from a file
 topics:
-  - Golang
-  - GitHub
-  - CI
+  - golang
+  - github
+  - ci
