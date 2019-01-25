@@ -10,7 +10,6 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/kylelemons/godebug/pretty"
-	"github.com/sergi/go-diff/diffmatchpatch"
 	"golang.org/x/oauth2"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -153,9 +152,4 @@ func ghClient(ctx context.Context, accessToken string) *github.Client {
 
 func isTravis() bool {
 	return os.Getenv("TRAVIS") == "true"
-}
-
-func lineDiff(a, b string) []diffmatchpatch.Diff {
-	dmp := diffmatchpatch.New()
-	return dmp.DiffMain(a, b, true)
 }
