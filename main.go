@@ -64,8 +64,8 @@ func dryRun(opt *Option, conf *Configuration) error {
 	}
 
 	cur := &Configuration{
-		Description: *repo.Description,
-		Homepage:    *repo.Homepage,
+		Description: repo.GetDescription(),
+		Homepage:    repo.GetHomepage(),
 		Topics:      topics,
 	}
 	for _, line := range strings.Split(pretty.Compare(cur, conf), "\n") {
@@ -125,7 +125,7 @@ func parseOption(args []string) (*Option, error) {
 		slug := strings.Split(os.Getenv("TRAVIS_REPO_SLUG"), "/")
 		opt.RepoOwner = slug[0]
 		opt.RepoName = slug[1]
-		opt.DryRun = os.Getenv("TRAVIS_PULL_REQUEST") == "false"
+		opt.DryRun = os.Getenv("TRAVIS_PULL_REQUEST") != "false" || os.Getenv("TRAVIS_BRANCH") != "master"
 	}
 
 	fs := flag.NewFlagSet(args[0], flag.ContinueOnError)

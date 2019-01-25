@@ -1,0 +1,4 @@
+language: go
+after_success:
+  - go install
+  - repo-metadata
